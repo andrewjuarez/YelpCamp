@@ -1,24 +1,48 @@
 //Server variables
 var port = 5455;
-var host = "localhost";
+var host = "0.0.0.0";
 
+// Dependencies
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
-
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
-
-var campgrounds = [
-    {name: "Utah", image: "https://pixabay.com/get/e837b1072af4003ed1584d05fb1d4e97e07ee3d21cac104491f4c378a2e4b1b8_340.jpg"},
-    {name: "Idaho", image: "https://pixabay.com/get/ef3cb00b2af01c22d2524518b7444795ea76e5d004b0144591f2c07caee9b5_340.jpg"},
-    {name: "Montana", image: "https://pixabay.com/get/e83db50929f0033ed1584d05fb1d4e97e07ee3d21cac104491f4c378a2e4b1b8_340.jpg"}
-];
+// MongoDB Client
+const mongoUN = "";
+const mongoPW = "";
+const mongoCluster = "";
+const MongoClient = require('mongodb').MongoClient;
+const mongoURL = "mongodb+srv://" + mongoUN + ":" + mongoPW + mongoCluster;
 
 
 app.get("/campgrounds", function(req, res){   
-    res.render("campgrounds", {campgrounds: campgrounds});
+    const dbclient = new MongoClient(mongoURL, { useNewUrlParser: true });
+
+    dbclient.connect(err => {
+        const collection = dbclient.db("test").collection("campgrounds");
+       // perform actions on the collection object
+      
+          console.log("Connected to campgrounds collection.");
+      
+          collection.find({}).toArray(function(err, result){
+              if(err){
+                  console.log("Error retrieving campgrounds..");
+              }
+              else if(result.length) {
+                  campgrounds = result;
+                //   console.log(result);
+                //   console.log(campgrounds);
+
+                  // Send the user off to the campgrounds page
+                  console.log("Re-directing to campgrounds page.");
+                  res.render("campgrounds", {campgrounds: result});
+              }
+          });
+        dbclient.close();
+        console.log("Conection closed..");
+      });
 });
 
 app.post("/campgrounds", function(req, res){
@@ -26,6 +50,19 @@ app.post("/campgrounds", function(req, res){
     var imageURL = req.body.image;
     var newCampground = {name:name, image:imageURL};
     campgrounds.push(newCampground);
+
+    const dbclient = new MongoClient(mongoURL, { useNewUrlParser: true });
+
+    dbclient.connect(err => {
+        const collection = dbclient.db("test").collection("campgrounds");
+      
+          console.log("Connected to campgrounds collection.");
+      
+        // Insert campground into DB
+        collection.insertOne(newCampground);
+        dbclient.close();
+        console.log("Conection closed..");
+      });
 
     // Re-direct
     res.redirect("/campgrounds");
@@ -40,5 +77,5 @@ app.get("/", function(req, res){
 });
 
 app.listen(port, host, function(){
-    console.log("YelpCamp server started..");
+    console.log("YelpCamp server started on " + host +":" + port);
 });
