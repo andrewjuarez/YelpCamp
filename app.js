@@ -1,6 +1,6 @@
 //Server variables
-var port = 5455;
-var host = "0.0.0.0";
+const port = 5455,
+      host = "0.0.0.0";
 
 // Dependencies
 var express = require("express");
@@ -9,61 +9,53 @@ var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
-// MongoDB Client
-const mongoUN = "";
-const mongoPW = "";
-const mongoCluster = "";
-const MongoClient = require('mongodb').MongoClient;
-const mongoURL = "mongodb+srv://" + mongoUN + ":" + mongoPW + mongoCluster;
+// mongoose client
+const mongoUN = "ycuser",
+      mongoPW = "DKYr0eWs92Np",
+      mongoCluster = "@yelpcamp-nl3st.mongodb.net/test",
+      mongoose = require('mongoose'),
+      mongoURL = "mongodb+srv://" + mongoUN + ":" + mongoPW + mongoCluster;
 
+// connect mongoose client to DB
+mongoose.connect(mongoURL, {useNewUrlParser: true});
 
-app.get("/campgrounds", function(req, res){   
-    const dbclient = new MongoClient(mongoURL, { useNewUrlParser: true });
+// Campground schema
+var campgroundSchema = new mongoose.Schema({
+    name: String,
+    image: String
+},{
+    versionKey: false
+});
 
-    dbclient.connect(err => {
-        const collection = dbclient.db("test").collection("campgrounds");
-       // perform actions on the collection object
-      
-          console.log("Connected to campgrounds collection.");
-      
-          collection.find({}).toArray(function(err, result){
-              if(err){
-                  console.log("Error retrieving campgrounds..");
-              }
-              else if(result.length) {
-                  campgrounds = result;
-                //   console.log(result);
-                //   console.log(campgrounds);
+// campground model
+var Campground = mongoose.model("campground", campgroundSchema);
 
-                  // Send the user off to the campgrounds page
-                  console.log("Re-directing to campgrounds page.");
-                  res.render("campgrounds", {campgrounds: result});
-              }
-          });
-        dbclient.close();
-        console.log("Conection closed..");
-      });
+app.get("/campgrounds", function(req, res){
+    // Get all campgrounds from DB
+    Campground.find({}, function(err, campgrounds){
+        if(err){
+            console.log("Error: Unable to retrive 'campgrounds':");
+            console.log(err);
+        } else {
+            
+            res.render("campgrounds", {campgrounds: campgrounds});
+        }
+    })
 });
 
 app.post("/campgrounds", function(req, res){
-    var name = req.body.name;
-    var imageURL = req.body.image;
-    var newCampground = {name:name, image:imageURL};
-    campgrounds.push(newCampground);
-
-    const dbclient = new MongoClient(mongoURL, { useNewUrlParser: true });
-
-    dbclient.connect(err => {
-        const collection = dbclient.db("test").collection("campgrounds");
+    const name = req.body.name;
+    const imageURL = req.body.image;
+    
+    // Add to DB
+    Campground.create({name:name, image:imageURL}, function(err, campground) {
+        if(err){
+            console.log("ERROR: Adding campground to DB:");
+            console.log(err);
+        }
+    });
       
-          console.log("Connected to campgrounds collection.");
-      
-        // Insert campground into DB
-        collection.insertOne(newCampground);
-        dbclient.close();
-        console.log("Conection closed..");
-      });
-
+    
     // Re-direct
     res.redirect("/campgrounds");
 });
