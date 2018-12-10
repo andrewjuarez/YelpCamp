@@ -9,6 +9,9 @@ var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
+// Import models
+var Campground = require("./models/campground");
+
 // mongoose client
 const mongoUN = "",
       mongoPW = "",
@@ -18,18 +21,6 @@ const mongoUN = "",
 
 // connect mongoose client to DB
 mongoose.connect(mongoURL, {useNewUrlParser: true});
-
-// Campground schema
-var campgroundSchema = new mongoose.Schema({
-    name: String,
-    image: String,
-    desc: String
-},{
-    versionKey: false
-});
-
-// campground model
-var Campground = mongoose.model("campground", campgroundSchema);
 
 app.get("/campgrounds", function(req, res){
     // Get all campgrounds from DB
