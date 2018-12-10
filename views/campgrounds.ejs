@@ -7,7 +7,7 @@
         <h1>Campgrounds</h1>
         <p>We feature campgrounds all over the globe!</p>
         <p>
-            <a class="btn btn-primary btn-lg" href="/campgrounds/new">Add a new campground</a>        
+            <a class="btn btn-secondary btn-lg" href="/campgrounds/new">Add a new campground</a>        
         </p>
     </div>    
 </header>
@@ -15,12 +15,14 @@
 
 <div class="row" style="display: flex; flex-wrap: wrap;">
     <% campgrounds.forEach(function(campground){ %>
-        <div class="col-md-3 col-sm-6">
+        <div class="col-md-3 col-sm-6" style="text-align: center;">
             <div class="img-thumbnail">   
                 <img src="<%= campground.image%>" style="width: 100%; height: auto;">
-                <div class="caption text-center">
+                <div class="caption">
                     <h4><%= campground["name"] %></h4>
                 </div>
+                    <a href="/campgrounds/<%=campground._id %>" class="btn btn-info">Info</a>
+                
             </div>
              
         </div>
