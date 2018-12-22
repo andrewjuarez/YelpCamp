@@ -28,6 +28,7 @@ router.post("/", isLoggedIn, function(req, res){
         username: req.user.username
     }
     const rate = req.body.rate;
+    console.log(rate);
     // Add to DB
     Campground.create({name:name, image:imageURL, desc:desc, author: author, rate: rate}, function(err, campground) {
         if(err){

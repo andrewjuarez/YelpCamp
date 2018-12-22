@@ -15,7 +15,11 @@
             <div class="thumbnail">
                     <img class="img-fluid" src="<%= campground.image%>">
                     <div class="caption">
-                        <h4 class="float-right">$<%= campground.rate %>/night</h4>
+                        <% if(campground.rate != 0) { %>
+                            <h4 class="float-right">$<%= campground.rate %>/night</h4>
+                        <% } else { %>
+                            <h4 class="float-right text-success">FREE</h4>
+                        <% } %>
                         <h4><%= campground["name"] %></h4>
                         <p><%= campground.desc %></p>
                         <p><em>Submitted By <%= campground.author.username %></em></p>
