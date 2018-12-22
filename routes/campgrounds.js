@@ -1,7 +1,6 @@
 var express = require("express");
 var router = express.Router();
-var  Campground = require("../models/campground")
-var  Comment    = require("../models/comment")
+var  Campground = require("../models/campground");
 
 // ========================
 // CAMPGROUNDS ROUTES
@@ -20,13 +19,17 @@ router.get("/", function(req, res){
 });
 
 
-router.post("/", function(req, res){
+router.post("/", isLoggedIn, function(req, res){
     const name = req.body.name;
     const imageURL = req.body.image;
     const desc = req.body.desc;
-    
+    const author =  {
+        id: req.user._id,
+        username: req.user.username
+    }
+    const rate = req.body.rate;
     // Add to DB
-    Campground.create({name:name, image:imageURL, desc:desc}, function(err, campground) {
+    Campground.create({name:name, image:imageURL, desc:desc, author: author, rate: rate}, function(err, campground) {
         if(err){
             console.log("ERROR: Adding campground to DB:");
             console.log(err);
@@ -38,7 +41,7 @@ router.post("/", function(req, res){
 });
 
 
-router.get("/new", function(req, res){
+router.get("/new", isLoggedIn, function(req, res){
     res.render("campgrounds/new");
 });
 
