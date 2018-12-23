@@ -8,7 +8,8 @@ var express = require("express"),
     bodyParser = require("body-parser"),
     mongoose = require('mongoose'),
     passport   = require("passport"),
-    LocalStrategy = require("passport-local");
+    LocalStrategy = require("passport-local"),
+    methodOverride = require("method-override");
 
 // Import models
 var Campground = require("./models/campground"),
@@ -24,6 +25,7 @@ var commentRoutes    = require("./routes/comments"),
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
+app.use(methodOverride("_method"));
 
 
 

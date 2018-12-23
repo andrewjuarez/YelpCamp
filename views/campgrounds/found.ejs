@@ -23,6 +23,8 @@
                         <h4><%= campground["name"] %></h4>
                         <p><%= campground.desc %></p>
                         <p><em>Submitted By <%= campground.author.username %></em></p>
+                        <a class="btn btn-sm btn-warning" href="/campgrounds/<%= campground._id %>/edit" style="margin-right: 10px;">Edit</a>
+                        <a class="btn btn-sm btn-danger" href="/campgrounds/<%= campground._id %>/delete">Delete</a>
                     </div>
             </div>
             <div class="card" style="background-color: #D7D8D6; padding: 15px;">

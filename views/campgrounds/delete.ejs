@@ -1,0 +1,21 @@
+<% include ../partials/header %>
+
+<div class="container">
+        <h1 class="text-danger">Delete <%= campground.name %>?</h1>
+
+        <img class="img-fluid" src="<%= campground.image %>">
+
+        <p>Are you sure you want to <strong>delete <%= campground.name %>?</strong> This
+        action cannot be reveresed when confirmed.</p>
+        <div class="row" style="padding-left: 15px;">
+            <form action="/campgrounds/<%= campground._id %>" method="GET">
+                <input class="btn btn-success" type="submit" value="Keep" style="margin-right: 15px;">
+            </form>
+            <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
+                <input class="btn btn-danger" type="submit" value="Delete">
+            </form>
+        </div>
+</div>
+
+
+<% include ../partials/footer %>
