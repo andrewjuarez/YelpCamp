@@ -1,0 +1,14 @@
+<% include ../partials/header %>
+<div class="container">
+    <div class="row">
+        <h3 style="text-align: center;">Edit Comment</h3>
+        <div style="width: 30%; margin: 25px auto;">
+            <form action="/campgrounds/<%= campground_id %>/comments/<%= comment._id %>/edit?_method=PUT" method="POST"> 
+                <input classs="form-control" type="text" name="comment[text]" value="<%= comment.text %>" autofocus="autofocus">
+                <input class="btn btn-lg btn-primary btn-block" type="submit">
+            </form>
+        </div>
+    </div>
+</div>
+
+<% include ../partials/footer %>

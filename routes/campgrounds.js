@@ -123,6 +123,7 @@ function isLoggedIn(req, res, next){
         res.redirect("/login");
     }
 }
+
 function checkCampgroundOwnership(req, res, next){
     if(req.isAuthenticated()){
         Campground.findById(req.params.id, function(err, foundCampground){
@@ -130,7 +131,7 @@ function checkCampgroundOwnership(req, res, next){
                 res.redirect("back");
             } else {
                 // Does the user own the campground?
-                if(foundCampground.author.id.equals(req.user._id)) { // Use .equals() b/c compaying a string to an object
+                if(foundCampground.author.id.equals(req.user._id)) { // Use .equals() b/c comparing a string to an object
                     // True, send them through.
                     next();
                 } else {

@@ -23,8 +23,11 @@
                         <h4><%= campground["name"] %></h4>
                         <p><%= campground.desc %></p>
                         <p><em>Submitted By <%= campground.author.username %></em></p>
-                        <a class="btn btn-sm btn-warning" href="/campgrounds/<%= campground._id %>/edit" style="margin-right: 10px;">Edit</a>
-                        <a class="btn btn-sm btn-danger" href="/campgrounds/<%= campground._id %>/delete">Delete</a>
+
+                        <% if(currentUser && campground.author.id.equals(currentUser._id) ) { %>
+                            <a class="btn btn-sm btn-warning" href="/campgrounds/<%= campground._id %>/edit" style="margin-right: 10px;">Edit</a>
+                            <a class="btn btn-sm btn-danger" href="/campgrounds/<%= campground._id %>/delete">Delete</a>
+                        <% } %>
                     </div>
             </div>
             <div class="card" style="background-color: #D7D8D6; padding: 15px;">
@@ -40,6 +43,14 @@
                                 <strong><%= comment.author.username %></strong>
                                 <span class="float-right">10 days ago</span>
                                 <p><%= comment.text %></p>
+                                <% if(currentUser && comment.author.id.equals(currentUser._id) ) { %>
+                                    <div class="row">
+                                        <a class="btn btn-sm btn-warning py-1" href="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>/edit"  style="margin-left: 17px; margin-right: 10px;">Edit</a>
+                                        <form action="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>?_method=DELETE"  method="POST">
+                                            <input class="btn btn-sm btn-danger py-1" type="submit" value="Delete">
+                                        </form>
+                                    </div>
+                                <% } %>
                         </div>
                     </div>
                     
