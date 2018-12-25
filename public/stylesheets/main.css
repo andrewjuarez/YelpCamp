@@ -39,3 +39,7 @@ html, body {
 #footer p {
     margin-bottom: 0;
 }
+
+.alert {
+    text-align: center;
+}
